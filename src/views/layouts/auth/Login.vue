@@ -6,19 +6,12 @@
           <div
             class="form-body lg:max-w-xl mx-auto lg:p-20 p-8 lg:mt-20 mt-5 space-y-8"
           >
-            <div
-              class="form-head cursor-pointer"
-              @click="$router.push('/')"
-            >
-              <img
-                src="../../../assets/logo/logo.svg"
-                alt=""
-                class="w-10"
-              />
+            <div class="form-head cursor-pointer" @click="$router.push('/')">
+              <img src="../../../assets/logo/logo.svg" alt="" class="w-10" />
             </div>
             <div class="space-y-3">
               <h2 class="dark:text-white font-semibold text-gray-800 text-4xl">
-                Welcome, to Windzo<span class="text-primary">.</span>
+                Welcome, to iMin Dashboard<span class="text-primary">.</span>
               </h2>
               <p class="dark:text-gray-400 text-gray-700">
                 Please enter your account to continue.
@@ -124,28 +117,28 @@
 </template>
 
 <script>
-  export default {};
+export default {};
 </script>
 <style>
-  /* custom pattern https://superdesigner.co/tools/css-backgrounds */
-  .bg-wave {
-    background: radial-gradient(
-        circle at top left,
-        transparent 25%,
-        #4f46e5 25.5%,
-        #4f46e5 36%,
-        transparent 37%,
-        transparent 100%
-      ),
-      radial-gradient(
-        circle at bottom right,
-        transparent 34%,
-        #4f46e5 34.5%,
-        #4f46e5 45.5%,
-        transparent 46%,
-        transparent 100%
-      );
-    background-size: 6em 6em;
-    opacity: 1;
-  }
+/* custom pattern https://superdesigner.co/tools/css-backgrounds */
+.bg-wave {
+  background: radial-gradient(
+      circle at top left,
+      transparent 25%,
+      #4f46e5 25.5%,
+      #4f46e5 36%,
+      transparent 37%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      transparent 34%,
+      #4f46e5 34.5%,
+      #4f46e5 45.5%,
+      transparent 46%,
+      transparent 100%
+    );
+  background-size: 6em 6em;
+  opacity: 1;
+}
 </style>

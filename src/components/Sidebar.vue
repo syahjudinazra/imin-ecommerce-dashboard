@@ -3,22 +3,12 @@
   <nav class="sidebar bg-white dark:bg-gray-800">
     <!-- sidebar head -->
     <div class="sidebar-head p-4">
-      <router-link
-        to="/"
-        exact
-        class="flex"
-      >
+      <router-link to="/" exact class="flex">
         <img
-          class="w-8 mt-1"
-          src="@/assets/logo/logo.svg"
-          alt="logo windzo"
+          class="w-40 mt-1"
+          src="@/assets/logo/imin-logo.png"
+          alt="imin-logo"
         />
-        <h2
-          class="text-2xl font-normal ml-3 mt-2 text-gray-800 dark:text-gray-200"
-          translate="no"
-        >
-          Windzo<span class="text-primary">.</span>
-        </h2>
       </router-link>
       <div
         class="bg-gray-700 absolute mt-3 dark:block hidden rounded-md py-1 px-2 text-xs text-gray-200"
@@ -65,55 +55,19 @@
               <template v-slot:icon>
                 <Icon icon="gg:components" />
               </template>
-              <template v-slot:title> Components </template>
+              <template v-slot:title> Product Management </template>
               <template v-slot:content>
                 <router-link
-                  to="/component/alert"
+                  to="/pages/all-products"
                   class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
-                  Alert
+                  All Products
                 </router-link>
                 <router-link
-                  to="/component/accordion"
+                  to="/pages/categories"
                   class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
-                  Accordion
-                </router-link>
-                <router-link
-                  to="/component/badge"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Badge
-                </router-link>
-                <router-link
-                  to="/component/breadcumb"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Breadcumb
-                </router-link>
-                <router-link
-                  to="/component/button"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Button
-                </router-link>
-                <router-link
-                  to="/component/card"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Card
-                </router-link>
-                <router-link
-                  to="/component/dropdown"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Dropdown
-                </router-link>
-                <router-link
-                  to="/component/modal"
-                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  Modal
+                  Categories
                 </router-link>
               </template>
             </menu-accordion>
@@ -121,93 +75,60 @@
           <div class="item mt-3">
             <menu-accordion>
               <template v-slot:icon>
-                <Icon icon="ri:layout-2-fill" />
+                <Icon icon="gg:components" />
               </template>
-              <template v-slot:title> Layouts </template>
+              <template v-slot:title> Orders </template>
               <template v-slot:content>
-                <p>Coming soon.</p>
+                <router-link
+                  to="/pages/all-orders"
+                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  All Orders
+                </router-link>
+                <router-link
+                  to="/pages/shipments"
+                  class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  Shipments
+                </router-link>
               </template>
             </menu-accordion>
           </div>
           <div class="item mt-3">
-            <menu-accordion>
-              <template v-slot:icon>
-                <Icon icon="ri:pages-fill" />
-              </template>
-              <template v-slot:title> Pages </template>
-              <template v-slot:content>
-                <div class="">
-                  <router-link
-                    to="/blank"
-                    class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  >
-                    Blank Page
-                  </router-link>
-                  <menu-accordion>
-                    <template v-slot:title> Error Page </template>
-                    <template v-slot:content>
-                      <router-link
-                        to="/404page"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        404 page
-                      </router-link>
-                      <router-link
-                        to="/500"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        500 page
-                      </router-link>
-                      <router-link
-                        to="/maintenance"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        Maintenance page
-                      </router-link>
-                    </template>
-                  </menu-accordion>
-                  <menu-accordion>
-                    <template v-slot:title> Authentication </template>
-                    <template v-slot:content>
-                      <router-link
-                        to="/auth/login"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        Login
-                      </router-link>
-                      <router-link
-                        to="/auth/register"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        Register
-                      </router-link>
-                      <router-link
-                        to="/auth/forgot-password"
-                        class="w-full text-left block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      >
-                        Forgot Password
-                      </router-link>
-                    </template>
-                  </menu-accordion>
-                </div>
-              </template>
-            </menu-accordion>
+            <router-link to="/tables">
+              <button
+                class="text-gray-800 dark:text-gray-500 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 w-full flex text-left rounded-md box-border p-3"
+              >
+                <span class="mr-3 text-xl"><Icon icon="bi:table" /></span>
+                <span class="w-full"> Customers </span>
+                <span class="box-border mt-1 text-gray-500"> </span>
+              </button>
+            </router-link>
           </div>
         </div>
       </div>
       <div class="pb-5">
-        <p class="font-medium text-gray-400 mt-4 dark:text-gray-400">
-          UI Form & Tables
-        </p>
+        <p class="font-medium text-gray-400 mt-4 dark:text-gray-400">Other</p>
 
         <div class="item mt-3">
           <menu-accordion>
             <template v-slot:icon>
-              <Icon icon="ant-design:form-outlined" />
+              <Icon icon="gg:components" />
             </template>
-            <template v-slot:title> Form Element </template>
+            <template v-slot:title> Report </template>
             <template v-slot:content>
-              <p class="text-gray-800 dark:text-gray-500">Coming soon.</p>
+              <router-link
+                to="/component/accordion"
+                class="w-full text-left text-gray-600 block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                Sales Report
+              </router-link>
+              <router-link
+                to="/component/accordion"
+                class="w-full text-left text-gray-600 block rounded-md p-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                Inventory Report
+              </router-link>
             </template>
           </menu-accordion>
         </div>
@@ -218,7 +139,7 @@
               class="text-gray-800 dark:text-gray-500 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 w-full flex text-left rounded-md box-border p-3"
             >
               <span class="mr-3 text-xl"><Icon icon="bi:table" /></span>
-              <span class="w-full"> Tables </span>
+              <span class="w-full"> Settings </span>
               <span class="box-border mt-1 text-gray-500"> </span>
             </button>
           </router-link>
@@ -229,12 +150,12 @@
 </template>
 
 <script>
-  import { Icon } from "@iconify/vue";
-  import MenuAccordion from "./MenuAccordion.vue";
-  export default {
-    components: {
-      Icon,
-      MenuAccordion,
-    },
-  };
+import { Icon } from "@iconify/vue";
+import MenuAccordion from "./MenuAccordion.vue";
+export default {
+  components: {
+    Icon,
+    MenuAccordion,
+  },
+};
 </script>
