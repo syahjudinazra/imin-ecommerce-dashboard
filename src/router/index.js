@@ -25,100 +25,153 @@ import Page500 from "../views/layouts/error/500.vue";
 import PageMaintenance from "../views/layouts/error/maintenance.vue";
 
 const routes = [
-  // Routes
   {
     path: "/",
     name: "Dashboard",
     component: Dashboard,
-    meta: { title: "Dashboard " },
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true,
+    },
   },
-
-  // Components based Routes
   {
     path: "/pages/all-products",
     name: "AllProducts",
     component: AllProducts,
+    meta: {
+      title: "All Products",
+      requiresAuth: true,
+    },
   },
   {
     path: "/products/add-product",
     name: "AddProduct",
     component: AddProductsPage,
+    meta: {
+      title: "Add Product",
+      requiresAuth: true,
+    },
   },
   {
     path: "/products/edit-product",
     name: "EditProduct",
     component: EditProductsPage,
+    meta: {
+      title: "Edit Product",
+      requiresAuth: true,
+    },
   },
   {
     path: "/pages/categories",
     name: "Categories",
     component: Categories,
+    meta: {
+      title: "Categories",
+      requiresAuth: true,
+    },
   },
   {
     path: "/categories/add-categories",
     name: "AddCategories",
     component: AddCategoriesPage,
+    meta: {
+      title: "Add Categories",
+      requiresAuth: true,
+    },
   },
   {
     path: "/categories/edit-categories",
     name: "EditCategories",
     component: EditCategoriesPage,
+    meta: {
+      title: "Edit Categories",
+      requiresAuth: true,
+    },
   },
   {
     path: "/pages/all-orders",
     name: "Orders",
     component: Orders,
+    meta: {
+      title: "Orders",
+      requiresAuth: true,
+    },
   },
   {
     path: "/orders/add-orders",
     name: "AddOrders",
     component: AddOrdersPage,
+    meta: {
+      title: "Add Orders",
+      requiresAuth: true,
+    },
   },
   {
     path: "/orders/edit-orders",
     name: "EditOrders",
     component: EditOrdersPage,
+    meta: {
+      title: "Edit Orders",
+      requiresAuth: true,
+    },
   },
-  // layouts
-
   {
     path: "/Blank",
     name: "Blank Page",
     component: Blank,
-    meta: { title: "Blank Page" },
+    meta: {
+      title: "Blank Page",
+      requiresAuth: true,
+    },
   },
 
+  // Public routes (no authentication required)
   {
-    path: "/auth/login",
+    path: "/login",
     name: "Login",
     component: Login,
-    meta: { title: "Login", hideNav: true },
+    meta: {
+      title: "Login",
+      hideNav: true,
+    },
   },
   {
-    path: "/auth/register",
+    path: "/register",
     name: "Register",
     component: Register,
-    meta: { title: "Register", hideNav: true },
+    meta: {
+      title: "Register",
+      hideNav: true,
+    },
   },
   {
-    path: "/auth/forgot-password",
+    path: "/forgot-password",
     name: "ForgotPassword",
     component: ForgotPassword,
-    meta: { title: "i Forgot Password", hideNav: true },
+    meta: {
+      title: "Forgot Password",
+      hideNav: true,
+    },
   },
-  // layout/error
-  // default page 404
+
+  // Error pages
   {
     path: "/:pathMatch(.*)*",
     name: "Page404",
     component: Page404,
-    meta: { title: "Upps! 404", hideNav: true },
+    meta: {
+      title: "Upps! 404",
+      hideNav: true,
+    },
   },
   {
     path: "/500",
     name: "Page500",
     component: Page500,
-    meta: { title: "Server internal Error", hideNav: true },
+    meta: {
+      title: "Server internal Error",
+      hideNav: true,
+    },
   },
   {
     path: "/maintenance",
@@ -134,13 +187,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-
   linkExactActiveClass: "exact-active",
 });
 
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title;
-  next();
-});
+// Authentication check function
+function isAuthenticated() {
+  const token = localStorage.getItem("token");
+  return !!token;
+}
 
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || "iMin-Ecommerce-Dashboard";
+
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    next({ name: "Login" });
+  } else if (to.name === "Login" && isAuthenticated()) {
+    next({ name: "Dashboard" });
+  } else {
+    next();
+  }
+});
 export default router;

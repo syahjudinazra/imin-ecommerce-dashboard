@@ -19,7 +19,7 @@ module.exports = {
         // packed: "#f2f2f2", you can use this color if you like
       },
       colors: {
-        primary: "#4F46E5",
+        primary: "#f6323f",
       },
       fontFamily: {
         lexend: "'Lexend', sans-serif",

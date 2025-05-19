@@ -6,14 +6,11 @@
           <div
             class="form-body max-w-xl mx-auto lg:p-20 p-8 lg:mt-10 mt-5 space-y-8"
           >
-            <div
-              class="form-head cursor-pointer"
-              @click="$router.push('/')"
-            >
+            <div class="form-head cursor-pointer" @click="$router.push('/')">
               <img
-                src="../../../assets/logo/logo.svg"
+                src="../../../assets/logo/imin-logo.png"
                 alt=""
-                class="w-10"
+                class="w-32 -ml-2"
               />
             </div>
             <div class="space-y-3">
@@ -131,7 +128,7 @@
             <p class="dark:text-white text-center text-gray-700">
               Already have an account?<button
                 type="button"
-                @click="$router.push('/auth/login')"
+                @click="$router.push('/login')"
                 class="ml-2 text-primary"
               >
                 Login here
@@ -145,5 +142,5 @@
 </template>
 
 <script>
-  export default {};
+export default {};
 </script>

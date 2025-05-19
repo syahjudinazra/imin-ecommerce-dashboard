@@ -2,12 +2,16 @@
   <div class="w-full h-screen">
     <div class="flex shadow rounded-md h-screen">
       <div class="bg-white dark:bg-gray-900 w-full">
-        <form>
+        <form @submit.prevent="handleLogin">
           <div
             class="form-body lg:max-w-xl mx-auto lg:p-20 p-8 lg:mt-20 mt-5 space-y-8"
           >
             <div class="form-head cursor-pointer" @click="$router.push('/')">
-              <img src="../../../assets/logo/logo.svg" alt="" class="w-10" />
+              <img
+                src="../../../assets/logo/imin-logo.png"
+                alt=""
+                class="w-32 -ml-2"
+              />
             </div>
             <div class="space-y-3">
               <h2 class="dark:text-white font-semibold text-gray-800 text-4xl">
@@ -17,6 +21,16 @@
                 Please enter your account to continue.
               </p>
             </div>
+
+            <!-- Error Alert -->
+            <div
+              v-if="error"
+              class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <span class="block sm:inline">{{ error }}</span>
+            </div>
+
             <button
               type="button"
               class="dark:text-white text-gray-700 flex justify-center gap-2 dark:bg-gray-700 bg-gray-100 hover:bg-gray-100/50 p-2 w-full rounded-md"
@@ -41,6 +55,7 @@
                   type="email"
                   name="floating_email"
                   id="floating_email"
+                  v-model="email"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
@@ -56,6 +71,7 @@
                   type="password"
                   name="floating_password"
                   id="floating_password"
+                  v-model="password"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
@@ -73,7 +89,7 @@
                   <input
                     id="remember"
                     type="checkbox"
-                    value=""
+                    v-model="rememberMe"
                     autocomplete="off"
                     class="accent-primary focus:ring-4 cursor-pointer w-4 h-4 border border-gray-300 rounded dark:bg-gray-700 bg-gray-50 focus:ring-3 focus:ring-primary/30"
                   />
@@ -85,7 +101,8 @@
                 >
               </div>
               <button
-                @click="$router.push('/auth/forgot-password')"
+                type="button"
+                @click="$router.push('/forgot-password')"
                 class="text-sm dark:text-white hover:text-primary text-gray-700"
               >
                 Forgot password?
@@ -93,14 +110,38 @@
             </div>
 
             <button
-              class="text-white bg-primary hover:bg-primary/80 p-3 w-full rounded-md"
+              type="submit"
+              class="text-white bg-primary hover:bg-primary/80 p-3 w-full rounded-md flex justify-center"
+              :disabled="isLoading"
             >
-              Login, to continue
+              <span v-if="isLoading" class="inline-block mr-2">
+                <svg
+                  class="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </span>
+              {{ isLoading ? "Logging in..." : "Login, to continue" }}
             </button>
             <p class="dark:text-white text-center text-gray-700">
               Don't have an account?<button
                 type="button"
-                @click="$router.push('/auth/register')"
+                @click="$router.push('/register')"
                 class="ml-2 text-primary"
               >
                 Register here
@@ -109,36 +150,61 @@
           </div>
         </form>
       </div>
-      <div
-        class="bg-wave dark:bg-gray-900 bg-white w-2/5 lg:block hidden"
-      ></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import AuthService from "../../../services/auth";
+
+export default {
+  name: "Login",
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
+
+    const email = ref("");
+    const password = ref("");
+    const rememberMe = ref(false);
+    const error = ref("");
+    const isLoading = ref(false);
+
+    const handleLogin = async () => {
+      // Clear previous errors
+      error.value = "";
+      isLoading.value = true;
+
+      try {
+        // Call authentication service
+        const result = await AuthService.login(email.value, password.value);
+
+        // Handle "remember me" option if needed
+        if (rememberMe.value) {
+          // Set longer expiration or flag in local storage
+          localStorage.setItem("rememberMe", "true");
+        }
+
+        // Redirect to intended destination or dashboard
+        const redirectPath = route.query.redirect || "/";
+        router.push(redirectPath);
+      } catch (err) {
+        console.error("Login error:", err);
+        error.value = "Invalid email or password. Please try again.";
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    return {
+      email,
+      password,
+      rememberMe,
+      error,
+      isLoading,
+      handleLogin,
+    };
+  },
+};
 </script>
-<style>
-/* custom pattern https://superdesigner.co/tools/css-backgrounds */
-.bg-wave {
-  background: radial-gradient(
-      circle at top left,
-      transparent 25%,
-      #4f46e5 25.5%,
-      #4f46e5 36%,
-      transparent 37%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      transparent 34%,
-      #4f46e5 34.5%,
-      #4f46e5 45.5%,
-      transparent 46%,
-      transparent 100%
-    );
-  background-size: 6em 6em;
-  opacity: 1;
-}
-</style>
