@@ -1,7 +1,6 @@
 <template>
   <header class="bg-white dark:bg-gray-800 p-2 border-b-2 dark:border-gray-700">
     <div class="wrap-header flex items-center gap-5 justify-between flex-wrap">
-      <!-- Left side with menu toggle and search -->
       <div class="flex flex-no-shrink items-center">
         <button
           class="text-gray-500 lg:hidden ml-3 block"
@@ -26,29 +25,10 @@
             />
           </svg>
         </button>
-        <div
-          class="input-box border dark:bg-gray-900 lg:ml-0 ml-5 dark:border-gray-700 rounded-md hidden lg:w-search w-full box-border lg:flex md:flex focus-within:bg-gray-100 dark:focus-within:bg-gray-700"
-        >
-          <span class="text-3xl p-2 text-gray-400">
-            <Icon icon="ei:search" />
-          </span>
-          <input
-            type="text"
-            placeholder="Search..."
-            class="p-3 w-full bg-white dark:bg-gray-900 dark:text-gray-400 rounded-md outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
-          />
-        </div>
       </div>
 
       <!-- Right side with user info and controls -->
       <div class="mr-5 flex gap-3">
-        <!-- Search button (mobile) -->
-        <button class="lg:hidden block mr-5 text-2xl text-gray-500 relative">
-          <i>
-            <Icon icon="ic:outline-search" />
-          </i>
-        </button>
-
         <!-- Fullscreen toggle -->
         <button
           @click="fullscreenToggle"

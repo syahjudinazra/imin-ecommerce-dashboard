@@ -53,7 +53,7 @@ const routes = [
     },
   },
   {
-    path: "/products/edit-product",
+    path: "/products/:id/edit-product",
     name: "EditProduct",
     component: EditProductsPage,
     meta: {

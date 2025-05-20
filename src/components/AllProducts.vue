@@ -1,26 +1,30 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import DeleteModal from "../components/Button/Products/DeleteProducts.vue";
+import api from "@/services/api.js";
 
+const products = ref([]);
 const isDeleteModalOpen = ref(false);
 const productToDelete = ref(null);
+const BASE_URL = "http://127.0.0.1:8000";
 
-const products = ref([
-  {
-    id: 1,
-    name: 'Apple MacBook Pro 17"',
-    color: "Silver",
-    category: "Laptop",
-    price: "$2999",
-  },
-  {
-    id: 2,
-    name: "Microsoft Surface Pro",
-    color: "Black",
-    category: "Laptop",
-    price: "$1999",
-  },
-]);
+const getImageUrl = (imagePath) => {
+  // If it's already an absolute URL, return it as is
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+  return `${BASE_URL}${imagePath}`;
+};
+
+// Fetch products from the API
+const fetchProducts = async () => {
+  try {
+    const response = await api.get("/products");
+    products.value = response.data.data.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
 
 const openDeleteModal = (product) => {
   productToDelete.value = product;
@@ -38,8 +42,11 @@ const handleDeleteConfirm = () => {
     (product) => product.id !== productToDelete.value.id
   );
   closeDeleteModal();
-  // Here you would typically also make an API call to delete from your backend
 };
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
 
 <template>
@@ -51,8 +58,9 @@ const handleDeleteConfirm = () => {
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th scope="col" class="px-6 py-3">Product name</th>
-          <th scope="col" class="px-6 py-3">Color</th>
+          <th scope="col" class="px-6 py-3">Product Name</th>
+          <th scope="col" class="px-6 py-3">Image</th>
+          <th scope="col" class="px-6 py-3">Stock</th>
           <th scope="col" class="px-6 py-3">Category</th>
           <th scope="col" class="px-6 py-3">Price</th>
           <th scope="col" class="px-6 py-3">
@@ -72,18 +80,26 @@ const handleDeleteConfirm = () => {
           >
             {{ product.name }}
           </th>
-          <td class="px-6 py-4">{{ product.color }}</td>
-          <td class="px-6 py-4">{{ product.category }}</td>
+          <td class="px-6 py-4">
+            <img
+              :src="getImageUrl(product.image)"
+              :alt="product.name"
+              class="h-16 w-16 object-cover rounded"
+            />
+          </td>
+          <td class="px-6 py-4">{{ product.stock }}</td>
+          <td class="px-6 py-4">{{ product.category.name }}</td>
           <td class="px-6 py-4">{{ product.price }}</td>
           <td class="px-6 py-4 flex justify-end space-x-4 text-right">
             <router-link
-              to="/products/edit-product"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >Edit</router-link
+              :to="`/products/${product.id}/edit-product`"
+              class="font-medium mt-4 text-blue-600 dark:text-blue-500 hover:underline"
             >
+              Edit
+            </router-link>
             <button
               @click="openDeleteModal(product)"
-              class="font-medium text-red-600 dark:text-red-500 hover:underline"
+              class="font-medium mt-4 text-red-600 dark:text-red-500 hover:underline"
             >
               Delete
             </button>
