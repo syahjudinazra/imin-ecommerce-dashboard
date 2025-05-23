@@ -3,7 +3,7 @@ import { onMounted, ref, watch, computed } from "vue";
 import api from "@/services/api.js";
 import DeleteModal from "../components/Button/Products/DeleteProducts.vue";
 
-const products = ref([]);
+const categories = ref([]);
 const isDeleteModalOpen = ref(false);
 const productToDelete = ref(null);
 const isLoading = ref(false);
@@ -44,16 +44,16 @@ watch(searchQuery, (newValue) => {
 
 watch(debouncedSearch, () => {
   currentPage.value = 1; // Reset to first page when searching
-  fetchProducts();
+  fetchCategories();
 });
 
 watch([sortBy, sortOrder, perPage], () => {
   currentPage.value = 1;
-  fetchProducts();
+  fetchCategories();
 });
 
 // Fetch products from the API
-const fetchProducts = async (page = 1) => {
+const fetchCategories = async (page = 1) => {
   try {
     isLoading.value = true;
 
@@ -68,18 +68,18 @@ const fetchProducts = async (page = 1) => {
       params.search = debouncedSearch.value.trim();
     }
 
-    const response = await api.get("/products", { params });
+    const response = await api.get("/categories", { params });
     const data = response.data.data;
 
-    products.value = data.data;
+    categories.value = data.data;
     currentPage.value = data.current_page;
     lastPage.value = data.last_page;
     total.value = data.total;
     from.value = data.from;
     to.value = data.to;
   } catch (error) {
-    console.error("Error fetching products:", error);
-    products.value = [];
+    console.error("Error fetching categories:", error);
+    categories.value = [];
   } finally {
     isLoading.value = false;
   }
@@ -88,7 +88,7 @@ const fetchProducts = async (page = 1) => {
 const goToPage = (page) => {
   if (page >= 1 && page <= lastPage.value && page !== currentPage.value) {
     currentPage.value = page;
-    fetchProducts(page);
+    fetchCategories(page);
   }
 };
 
@@ -169,7 +169,7 @@ const showingText = computed(() => {
 });
 
 onMounted(() => {
-  fetchProducts();
+  fetchCategories();
 });
 </script>
 
@@ -243,7 +243,7 @@ onMounted(() => {
     <!-- Loading Indicator -->
     <div v-if="isLoading" class="flex justify-center py-8">
       <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"
       ></div>
     </div>
 
@@ -259,30 +259,19 @@ onMounted(() => {
             <th scope="col" class="px-6 py-3">
               <button
                 @click="toggleSort('name')"
-                class="flex items-center space-x-1 hover:text-blue-600"
+                class="flex items-center space-x-1 hover:text-red-600"
               >
-                <span>Product Name</span>
+                <span>Category Name</span>
                 <span class="text-xs">{{ getSortIcon("name") }}</span>
               </button>
             </th>
-            <th scope="col" class="px-6 py-3">Image</th>
             <th scope="col" class="px-6 py-3">
               <button
-                @click="toggleSort('stock')"
-                class="flex items-center space-x-1 hover:text-blue-600"
+                @click="toggleSort('slug')"
+                class="flex items-center space-x-1 hover:text-red-600"
               >
-                <span>Stock</span>
-                <span class="text-xs">{{ getSortIcon("stock") }}</span>
-              </button>
-            </th>
-            <th scope="col" class="px-6 py-3">Category</th>
-            <th scope="col" class="px-6 py-3">
-              <button
-                @click="toggleSort('price')"
-                class="flex items-center space-x-1 hover:text-blue-600"
-              >
-                <span>Price</span>
-                <span class="text-xs">{{ getSortIcon("price") }}</span>
+                <span>Slug</span>
+                <span class="text-xs">{{ getSortIcon("slug") }}</span>
               </button>
             </th>
             <th scope="col" class="px-6 py-3">
@@ -292,7 +281,7 @@ onMounted(() => {
         </thead>
         <tbody>
           <tr
-            v-if="products.length === 0"
+            v-if="categories.length === 0"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
             <td
@@ -308,36 +297,26 @@ onMounted(() => {
           </tr>
           <tr
             v-else
-            v-for="product in products"
-            :key="product.id"
+            v-for="category in categories"
+            :key="category.id"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
             <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
-              {{ product.name }}
+              {{ category.name }}
             </th>
-            <td class="px-6 py-4">
-              <img
-                :src="getImageUrl(product.image)"
-                :alt="product.name"
-                class="h-16 w-16 object-cover rounded"
-              />
-            </td>
-            <td class="px-6 py-4">
-              <span
-                :class="product.stock > 0 ? 'text-green-600' : 'text-red-600'"
-                class="font-medium"
-              >
-                {{ product.stock }}
-              </span>
-            </td>
-            <td class="px-6 py-4">{{ product.category.name }}</td>
-            <td class="px-6 py-4 font-medium">${{ product.price }}</td>
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ category.slug }}
+            </th>
+
             <td class="px-6 py-4 flex justify-end space-x-4 text-right">
               <router-link
-                :to="`/products/${product.id}/edit-product`"
+                :to="`/categories/${category.id}/edit-categories`"
                 class="font-medium mt-4 text-blue-600 dark:text-blue-500 hover:underline"
               >
                 Edit

@@ -1,125 +1,171 @@
 <template>
   <div class="container mx-auto px-4 sm:px-8">
     <div class="py-8">
-      <h2 class="text-2xl font-semibold leading-tight">Add Categories</h2>
+      <h2
+        class="text-2xl font-semibold leading-tight text-black dark:text-white"
+      >
+        Add New Category
+      </h2>
     </div>
-    <form class="mx-auto">
+    <form class="mx-auto" @submit.prevent="saveCategory">
       <div class="relative z-0 w-full mb-5 group">
         <input
-          type="email"
-          name="floating_email"
-          id="floating_email"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          type="text"
+          name="name"
+          id="name"
+          v-model="category.name"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer"
           placeholder=" "
           required
         />
         <label
-          for="floating_email"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Email address</label
+          for="name"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-primary peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >Category Name</label
         >
+        <span v-if="errors.name" class="text-red-500 text-xs">{{
+          errors.name[0]
+        }}</span>
       </div>
+
       <div class="relative z-0 w-full mb-5 group">
         <input
-          type="password"
-          name="floating_password"
-          id="floating_password"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          type="text"
+          name="slug"
+          id="slug"
+          v-model="category.slug"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer"
           placeholder=" "
           required
         />
         <label
-          for="floating_password"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Password</label
+          for="slug"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-primary peer-focus:dark:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >Slug</label
         >
+        <span v-if="errors.slug" class="text-red-500 text-xs">{{
+          errors.slug[0]
+        }}</span>
       </div>
-      <div class="relative z-0 w-full mb-5 group">
-        <input
-          type="password"
-          name="repeat_password"
-          id="floating_repeat_password"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-          placeholder=" "
-          required
-        />
-        <label
-          for="floating_repeat_password"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Confirm password</label
-        >
+
+      <div
+        v-if="successMessage"
+        class="mb-5 p-4 rounded-lg bg-green-100 text-green-700"
+      >
+        {{ successMessage }}
       </div>
-      <div class="grid md:grid-cols-2 md:gap-6">
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="text"
-            name="floating_first_name"
-            id="floating_first_name"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_first_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >First name</label
-          >
-        </div>
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="text"
-            name="floating_last_name"
-            id="floating_last_name"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_last_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Last name</label
-          >
-        </div>
-      </div>
-      <div class="grid md:grid-cols-2 md:gap-6">
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="tel"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            name="floating_phone"
-            id="floating_phone"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_phone"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Phone number (123-456-7890)</label
-          >
-        </div>
-        <div class="relative z-0 w-full mb-5 group">
-          <input
-            type="text"
-            name="floating_company"
-            id="floating_company"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_company"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Company (Ex. Google)</label
-          >
-        </div>
-      </div>
+
       <button
         type="submit"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        :disabled="loading"
+        class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-gray-700 dark:focus:ring-gray-800 disabled:opacity-50"
       >
         Submit
       </button>
     </form>
   </div>
 </template>
+
+<script>
+import api from "@/services/api";
+
+export default {
+  name: "CategoryForm",
+  data() {
+    return {
+      category: {
+        name: "",
+        slug: "",
+      },
+      errors: {},
+      loading: false,
+      successMessage: "",
+    };
+  },
+  mounted() {
+    this.fetchCategories();
+  },
+  watch: {
+    // Auto-generate slug from name
+    "category.name": function (newVal) {
+      this.category.slug = newVal
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
+    },
+  },
+  methods: {
+    fetchCategories() {
+      api
+        .get("/categories")
+        .then((response) => {
+          this.categories = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+
+    // Save category to database
+    saveCategory() {
+      this.loading = true;
+      this.errors = {};
+      this.successMessage = "";
+
+      // Create FormData object for file upload
+      const formData = new FormData();
+      formData.append("name", this.category.name);
+      formData.append("slug", this.category.slug);
+
+      api
+        .post("/categories", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          this.loading = false;
+          this.successMessage = "Successfully Add New category!";
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.loading = false;
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.errors
+          ) {
+            this.errors = error.response.data.errors;
+          } else if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            this.errors = { general: [error.response.data.message] };
+          } else {
+            this.errors = {
+              general: ["An error occurred. Please try again."],
+            };
+          }
+        });
+    },
+
+    // Reset form after successful submission
+    resetForm() {
+      this.category = {
+        name: "",
+        slug: "",
+      };
+
+      // Reset file input
+      const fileInput = document.getElementById("image");
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    },
+  },
+};
+</script>

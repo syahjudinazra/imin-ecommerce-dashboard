@@ -4,16 +4,16 @@
       <h2 class="text-2xl font-semibold leading-tight">All Categories</h2>
       <AddCategories />
     </div>
-    <AllProducts />
+    <AllCategories />
   </div>
 </template>
 
 <script>
-import AllProducts from "@/components/AllProducts.vue";
+import AllCategories from "@/components/AllCategories.vue";
 import AddCategories from "@/components/Button/Categories/AddCategories.vue";
 export default {
   components: {
-    AllProducts,
+    AllCategories,
     AddCategories,
   },
 };

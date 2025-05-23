@@ -80,7 +80,7 @@ const routes = [
     },
   },
   {
-    path: "/categories/edit-categories",
+    path: "/categories/:id/edit-categories",
     name: "EditCategories",
     component: EditCategoriesPage,
     meta: {
