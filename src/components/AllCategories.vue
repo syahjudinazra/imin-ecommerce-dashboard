@@ -1,11 +1,11 @@
 <script setup>
 import { onMounted, ref, watch, computed } from "vue";
 import api from "@/services/api.js";
-import DeleteModal from "../components/Button/Products/DeleteProducts.vue";
+import DeleteModal from "../components/Button/Categories/DeleteCategories.vue";
 
 const categories = ref([]);
 const isDeleteModalOpen = ref(false);
-const productToDelete = ref(null);
+const categoryToDelete = ref(null);
 const isLoading = ref(false);
 const isDeleting = ref(false);
 
@@ -52,7 +52,7 @@ watch([sortBy, sortOrder, perPage], () => {
   fetchCategories();
 });
 
-// Fetch products from the API
+// Fetch categories from the API
 const fetchCategories = async (page = 1) => {
   try {
     isLoading.value = true;
@@ -109,25 +109,25 @@ const clearSearch = () => {
   debouncedSearch.value = "";
 };
 
-const openDeleteModal = (product) => {
-  productToDelete.value = product;
+const openDeleteModal = (category) => {
+  categoryToDelete.value = category;
   isDeleteModalOpen.value = true;
 };
 
 const closeDeleteModal = () => {
   isDeleteModalOpen.value = false;
-  productToDelete.value = null;
+  categoryToDelete.value = null;
 };
 
 const handleDeleteConfirm = () => {
-  products.value = products.value.filter(
-    (product) => product.id !== productToDelete.value.id
+  categories.value = categories.value.filter(
+    (category) => category.id !== categoryToDelete.value.id
   );
   total.value = Math.max(0, total.value - 1);
   closeDeleteModal();
 
   // Refresh the current page if it becomes empty
-  if (products.value.length === 0 && currentPage.value > 1) {
+  if (categories.value.length === 0 && currentPage.value > 1) {
     goToPage(currentPage.value - 1);
   }
 };
@@ -164,8 +164,8 @@ const pageNumbers = computed(() => {
 });
 
 const showingText = computed(() => {
-  if (total.value === 0) return "No products found";
-  return `Showing ${from.value} to ${to.value} of ${total.value} products`;
+  if (total.value === 0) return "No categories found";
+  return `Showing ${from.value} to ${to.value} of ${total.value} categories`;
 });
 
 onMounted(() => {
@@ -183,7 +183,7 @@ onMounted(() => {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search products..."
+            placeholder="Search categories..."
             class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
           />
           <div
@@ -290,8 +290,8 @@ onMounted(() => {
             >
               {{
                 searchQuery
-                  ? "No products found matching your search."
-                  : "No products available."
+                  ? "No categories found matching your search."
+                  : "No categories available."
               }}
             </td>
           </tr>
@@ -322,7 +322,7 @@ onMounted(() => {
                 Edit
               </router-link>
               <button
-                @click="openDeleteModal(product)"
+                @click="openDeleteModal(category)"
                 class="font-medium mt-4 text-red-600 dark:text-red-500 hover:underline"
               >
                 Delete
@@ -421,10 +421,10 @@ onMounted(() => {
   <!-- Delete Modal -->
   <DeleteModal
     :is-open="isDeleteModalOpen"
-    :item-to-delete="productToDelete"
+    :item-to-delete="categoryToDelete"
     :is-loading="isDeleting"
     item-name-field="name"
-    delete-endpoint="/products"
+    delete-endpoint="/categories"
     @close="closeDeleteModal"
     @confirm="handleDeleteConfirm"
   />
