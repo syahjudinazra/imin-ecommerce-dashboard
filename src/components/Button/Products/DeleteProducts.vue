@@ -28,14 +28,49 @@ const props = defineProps({
 const emit = defineEmits(["close", "confirm", "deleted", "error"]);
 
 const isDeleting = ref(false);
+const toast = ref({
+  show: false,
+  type: "", // 'success' or 'error'
+  message: "",
+  timeout: null,
+});
+
+const showToast = (type, message, duration = 4000) => {
+  // Clear existing timeout
+  if (toast.value.timeout) {
+    clearTimeout(toast.value.timeout);
+  }
+
+  toast.value = {
+    show: true,
+    type,
+    message,
+    timeout: null,
+  };
+
+  // Auto hide toast after duration
+  toast.value.timeout = setTimeout(() => {
+    hideToast();
+  }, duration);
+};
+
+const hideToast = () => {
+  toast.value.show = false;
+  if (toast.value.timeout) {
+    clearTimeout(toast.value.timeout);
+    toast.value.timeout = null;
+  }
+};
 
 const closeModal = () => {
+  hideToast(); // Hide toast when modal closes
   emit("close");
 };
 
 const confirmDelete = async () => {
   if (!props.itemToDelete || !props.itemToDelete.id) {
     console.error("No item to delete or missing ID");
+    showToast("error", "No item selected for deletion");
     return;
   }
 
@@ -46,17 +81,31 @@ const confirmDelete = async () => {
       `${props.deleteEndpoint}/${props.itemToDelete.id}`
     );
 
+    // Show success toast
+    showToast(
+      "success",
+      `${props.itemToDelete[props.itemNameField]} deleted successfully`
+    );
+
     emit("deleted", {
       item: props.itemToDelete,
       response: response.data,
     });
 
-    emit("close");
+    // Close modal after a short delay to show the toast
+    setTimeout(() => {
+      emit("close");
+    }, 1500);
   } catch (error) {
     console.error("Error deleting item:", error);
+
+    const errorMessage =
+      error.response?.data?.message || "Failed to delete item";
+    showToast("error", errorMessage);
+
     emit("error", {
       error,
-      message: error.response?.data?.message || "Failed to delete item",
+      message: errorMessage,
     });
   } finally {
     isDeleting.value = false;
@@ -69,6 +118,66 @@ const confirmDelete = async () => {
     v-if="isOpen"
     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
   >
+    <!-- Toast Notification -->
+    <div
+      v-if="toast.show"
+      :class="[
+        'fixed top-4 right-4 z-[60] max-w-sm w-full rounded-lg shadow-lg transition-all duration-300 transform',
+        toast.type === 'success'
+          ? 'bg-green-500 text-white'
+          : 'bg-red-500 text-white',
+      ]"
+    >
+      <div class="flex items-center p-4">
+        <!-- Success Icon -->
+        <svg
+          v-if="toast.type === 'success'"
+          class="w-5 h-5 mr-3 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+
+        <!-- Error Icon -->
+        <svg
+          v-else
+          class="w-5 h-5 mr-3 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+
+        <div class="flex-1">
+          <p class="text-sm font-medium">{{ toast.message }}</p>
+        </div>
+
+        <!-- Close button -->
+        <button
+          @click="hideToast"
+          class="ml-3 text-white hover:text-gray-200 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Content -->
     <div class="relative p-4 w-full max-w-md">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
         <button

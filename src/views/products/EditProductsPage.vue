@@ -206,7 +206,7 @@ export default {
       api
         .get("/categories")
         .then((response) => {
-          this.categories = response.data.data;
+          this.categories = response.data.data.data;
         })
         .catch((error) => {
           console.error("Error fetching categories:", error);
