@@ -25,6 +25,9 @@ const sortOrder = ref("desc");
 const BASE_URL = "http://127.0.0.1:8000";
 
 const getImageUrl = (imagePath) => {
+  if (!imagePath) {
+    return "";
+  }
   if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
     return imagePath;
   }
